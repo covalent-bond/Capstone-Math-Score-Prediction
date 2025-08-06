@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -98,19 +97,20 @@ if analysis_type == "Descriptive Analytics":
     st.plotly_chart(fig_hist, use_container_width=True)
     st.write(f"This histogram and box plot show the spread and central tendency of {selected_score.replace('_', ' ').title()}.")
 
-    st.subheader("Scores by Gender and Test Preparation")
+    st.subheader("Scores by Lunch and Test Preparation") # Changed subheader
     col1, col2 = st.columns(2)
     with col1:
-        fig_gender = px.box(df, x='gender', y=selected_score, color='gender',
-                            title=f'{selected_score.replace("_", " ").title()} by Gender',
-                            color_discrete_sequence=px.colors.qualitative.Pastel)
-        st.plotly_chart(fig_gender, use_container_width=True)
+        # Changed from 'gender' to 'lunch'
+        fig_lunch = px.box(df, x='lunch', y=selected_score, color='lunch',
+                            title=f'{selected_score.replace("_", " ").title()} by Lunch Type',
+                            color_discrete_sequence=px.colors.qualitative.Dark24)
+        st.plotly_chart(fig_lunch, use_container_width=True)
     with col2:
         fig_prep = px.box(df, x='test preparation course', y=selected_score, color='test preparation course',
                           title=f'{selected_score.replace("_", " ").title()} by Test Preparation Course',
                           color_discrete_sequence=px.colors.qualitative.Set2)
         st.plotly_chart(fig_prep, use_container_width=True)
-    st.write("Box plots illustrating score differences based on gender and test preparation course completion.")
+    st.write("Box plots illustrating score differences based on lunch type and test preparation course completion.") # Updated description
 
     st.subheader("Correlation Matrix of Scores")
     corr_matrix = df[score_cols].corr()
@@ -213,6 +213,9 @@ elif analysis_type == "Predictive Analytics":
     st.subheader("Make a Prediction for a New Student")
     st.write("Enter the characteristics of a new student to predict their Math Score.")
 
+    # Add a side note for score range
+    st.info("Note: All score inputs must be between 1 and 100.")
+
     col_input1, col_input2, col_input3 = st.columns(3)
     with col_input1:
         input_gender = st.selectbox("Gender:", df['gender'].unique())
@@ -222,8 +225,9 @@ elif analysis_type == "Predictive Analytics":
         input_lunch = st.selectbox("Lunch Type:", df['lunch'].unique())
     with col_input3:
         input_test_prep = st.selectbox("Test Prep Course:", df['test preparation course'].unique())
-        input_reading = st.number_input("Reading Score:", min_value=0, max_value=100, value=70)
-        input_writing = st.number_input("Writing Score:", min_value=0, max_value=100, value=65)
+        # Updated min_value and max_value for score inputs
+        input_reading = st.number_input("Reading Score:", min_value=1, max_value=100, value=70)
+        input_writing = st.number_input("Writing Score:", min_value=1, max_value=100, value=65)
 
     if st.button("Predict Math Score for New Student"):
         new_student_data = {
@@ -284,6 +288,9 @@ elif analysis_type == "Prescriptive Analytics":
     st.subheader("Simulate Targeted Intervention for a New Student")
     st.write("Enter details for a hypothetical student to see predicted score and specific recommendations.")
 
+    # Add a side note for score range
+    st.info("Note: All score inputs must be between 1 and 100.")
+
     col_sim1, col_sim2, col_sim3 = st.columns(3)
     with col_sim1:
         sim_gender = st.selectbox("Simulate Gender:", df['gender'].unique(), key='sim_gender')
@@ -293,8 +300,9 @@ elif analysis_type == "Prescriptive Analytics":
         sim_lunch = st.selectbox("Simulate Lunch Type:", df['lunch'].unique(), key='sim_lunch')
     with col_sim3:
         sim_test_prep = st.selectbox("Simulate Test Prep Course:", df['test preparation course'].unique(), key='sim_test_prep')
-        sim_reading = st.number_input("Simulate Reading Score:", min_value=0, max_value=100, value=50, key='sim_reading')
-        sim_writing = st.number_input("Simulate Writing Score:", min_value=0, max_value=100, value=55, key='sim_writing')
+        # Updated min_value and max_value for score inputs
+        sim_reading = st.number_input("Simulate Reading Score:", min_value=1, max_value=100, value=50, key='sim_reading')
+        sim_writing = st.number_input("Simulate Writing Score:", min_value=1, max_value=100, value=55, key='sim_writing')
 
     if st.button("Get Targeted Recommendations"):
         sim_student_data = {
